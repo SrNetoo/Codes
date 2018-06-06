@@ -1,9 +1,37 @@
-int m=1500;
-	int n=1500;
-	int aux=-1;
-	
-	double MatrizA[1500][1500];
+#include "stdio.h"
+#include "stdlib.h"
+#include "time.h"
 
+int acertos=0;
+int erros=0;
+int indice=0;
+int u=0;
+int m=1500;
+int n=1500;
+int aux=-1;
+
+double MatrizA[1500][1500];
+
+double MatrizA = LerTeste;
+double MatrizB = LerTreino;
+
+int kmovimento[100000]; // guardarei as classificacoes dos valores d k
+
+
+for(int j=0; j<100000 ; j++ ){
+			kmovimento[j]=-1; 
+		}
+
+double k[1500][1500]; // guardarei os valores de k
+
+
+	for(int i=0; i<1500 ; i++){        // 'zero' a matriz dando pra ela o valor de -1
+		for(int j=0; j<1500 ; j++ ){
+			k[i][j]=-1; 
+		}
+	}
+
+double DTW[1500][1500];
 
 
 
@@ -116,7 +144,7 @@ double ordenar_classificar(){
 
 }
 
-
+//ok
 int inteiro_teste(double a){
 	int x;
 	double n;
@@ -145,8 +173,9 @@ int custolocal(int a, int b, int x, int y){
 	
 }
 
+//ok
 double minimo(double a, double b, double c){
-	int min;
+	double min;
 	if (a<b){
 	if(b<c){
 		min=a;
@@ -154,14 +183,14 @@ double minimo(double a, double b, double c){
 	else{
 		if(a<c){
 			min=a;
-			}
+		}
+
 			else{
 				min=c;
-				return min;
 				}
-			}
+			
 		}
-	
+	}
 
 	else{
 		if(a<c){
@@ -173,7 +202,6 @@ double minimo(double a, double b, double c){
 				}
 						else{
 							min=c;
-							return min;
 						}
 			}
 
@@ -225,111 +253,110 @@ void dtw(double MatrizA[][], double MatrizB[][], double DTW[][]){ // Vetor A = i
 } 
 
 
+//ok
+void LerTeste (){
 
-	void LerTeste (){
 
+	for(int i=0; i<m ; i++){        // 'zero' a matriz dando pra ela o valor de -1
+		for(int j=0; j<n ; j++ ){
+			MatrizA[i][j]=-1; 
+		}
+	}
+	
 
-		for(int i=0; i<m ; i++){        // 'zero' a matriz dando pra ela o valor de -1
-			for(int j=0; j<n ; j++ ){
-				MatrizA[i][j]=-1; 
+	FILE *arq;
+
+	arq = fopen("/home/neto/N/USP/Codigos_Alg/Projeto_2018/base de dados/teste.txt", "r");
+	int f=0;
+	int g=0;
+	// MANEIRA 2 acho q vai ser essa
+	while (!feof(arq)){ // talvez tenha q ser um for(for m<nmero maximo de linhas) aqui, n sei se ele le o arquivo sempre q volta aqui, ou se ele le tudo de uma vez 
+	
+		fscanf(arq, "%lf", &MatrizA[f][g]);
+		if(f != 0 || g != 0){
+			if(MatrizA[f][0]<=2){
+			if (inteiro_teste(MatrizA[f][g]) == 1){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
+				aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
+				MatrizA[f][g] = -1; // zero o valor nessa posiçao
+				f++; // arrumo a linha
+				g=0; // arrumo a coluna
+				MatrizA[f][g] = aux; // ponho o valor no lugar certo
 			}
 		}
+		else{
+
+			if (inteiro_teste(MatrizA[f][g]) == 1 && MatrizA[f][g]>2){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
+				aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
+				MatrizA[f][g] = -1; // zero o valor nessa posiçao
+				f++; // arrumo a linha
+				g=0; // arrumo a coluna
+				MatrizA[f][g] = aux; // ponho o valor no lugar certo
+			}
+
+		}
+		}
+	      
+			g++;
+		
+	
+		}	
+
+		fclose(arq);
+
 		
 
-		FILE *arq;
+}
 
-		arq = fopen("/home/neto/N/USP/Codigos_Alg/Projeto_2018/base de dados/teste.txt", "r");
-		int f=0;
-		int g=0;
-		// MANEIRA 2 acho q vai ser essa
-		while (!feof(arq)){ // talvez tenha q ser um for(for m<nmero maximo de linhas) aqui, n sei se ele le o arquivo sempre q volta aqui, ou se ele le tudo de uma vez 
-		
-			fscanf(arq, "%lf", &MatrizA[f][g]);
-			if(f != 0 || g != 0){
-				if(MatrizA[f][0]<=2){
-				if (inteiro_teste(MatrizA[f][g]) == 1){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
-					aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
-					MatrizA[f][g] = -1; // zero o valor nessa posiçao
-					f++; // arrumo a linha
-					g=0; // arrumo a coluna
-					MatrizA[f][g] = aux; // ponho o valor no lugar certo
-				}
-			}
-			else{
+//ok
+void LerTreino (){
 
-				if (inteiro_teste(MatrizA[f][g]) == 1 && MatrizA[f][g]>2){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
-					aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
-					MatrizA[f][g] = -1; // zero o valor nessa posiçao
-					f++; // arrumo a linha
-					g=0; // arrumo a coluna
-					MatrizA[f][g] = aux; // ponho o valor no lugar certo
-				}
 
-			}
-			}
-		      
-				g++;
-			
-		
-			}	
-
-			fclose(arq);
-
-			
-
+	for(int i=0; i<m ; i++){        // 'zero' a matriz dando pra ela o valor de -1
+		for(int j=0; j<n ; j++ ){
+			MatrizA[i][j]=-1; 
+		}
 	}
+	
 
+	FILE *arq;
 
-	void LerTreino (){
-
-
-		for(int i=0; i<m ; i++){        // 'zero' a matriz dando pra ela o valor de -1
-			for(int j=0; j<n ; j++ ){
-				MatrizA[i][j]=-1; 
+	arq = fopen("/home/neto/N/USP/Codigos_Alg/Projeto_2018/base de dados/treino.txt", "r");
+	int f=0;
+	int g=0;
+	// MANEIRA 2 acho q vai ser essa
+	while (!feof(arq)){ // talvez tenha q ser um for(for m<nmero maximo de linhas) aqui, n sei se ele le o arquivo sempre q volta aqui, ou se ele le tudo de uma vez 
+	
+		fscanf(arq, "%lf", &MatrizA[f][g]);
+		if(f != 0 || g != 0){
+			if(MatrizA[f][0]<=2){
+			if (inteiro_teste(MatrizA[f][g]) == 1){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
+				aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
+				MatrizA[f][g] = -1; // zero o valor nessa posiçao
+				f++; // arrumo a linha
+				g=0; // arrumo a coluna
+				MatrizA[f][g] = aux; // ponho o valor no lugar certo
 			}
 		}
+		else{
+
+			if (inteiro_teste(MatrizA[f][g]) == 1 && MatrizA[f][g]>2){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
+				aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
+				MatrizA[f][g] = -1; // zero o valor nessa posiçao
+				f++; // arrumo a linha
+				g=0; // arrumo a coluna
+				MatrizA[f][g] = aux; // ponho o valor no lugar certo
+			}
+
+		}
+		}
+	      
+			g++;
+		
+	
+		}	
+
+		fclose(arq);
+
 		
 
-		FILE *arq;
-
-		arq = fopen("/home/neto/N/USP/Codigos_Alg/Projeto_2018/base de dados/treino.txt", "r");
-		int f=0;
-		int g=0;
-		// MANEIRA 2 acho q vai ser essa
-		while (!feof(arq)){ // talvez tenha q ser um for(for m<nmero maximo de linhas) aqui, n sei se ele le o arquivo sempre q volta aqui, ou se ele le tudo de uma vez 
-		
-			fscanf(arq, "%lf", &MatrizA[f][g]);
-			if(f != 0 || g != 0){
-				if(MatrizA[f][0]<=2){
-				if (inteiro_teste(MatrizA[f][g]) == 1){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
-					aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
-					MatrizA[f][g] = -1; // zero o valor nessa posiçao
-					f++; // arrumo a linha
-					g=0; // arrumo a coluna
-					MatrizA[f][g] = aux; // ponho o valor no lugar certo
-				}
-			}
-			else{
-
-				if (inteiro_teste(MatrizA[f][g]) == 1 && MatrizA[f][g]>2){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
-					aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
-					MatrizA[f][g] = -1; // zero o valor nessa posiçao
-					f++; // arrumo a linha
-					g=0; // arrumo a coluna
-					MatrizA[f][g] = aux; // ponho o valor no lugar certo
-				}
-
-			}
-			}
-		      
-				g++;
-			
-		
-			}	
-
-			fclose(arq);
-
-			
-
-	}
-
+}
