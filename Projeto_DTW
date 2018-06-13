@@ -25,11 +25,11 @@ for(int j=0; j<100000 ; j++ ){
 double k[1500][1500]; // guardarei os valores de k
 
 
-	for(int i=0; i<1500 ; i++){        // 'zero' a matriz dando pra ela o valor de -1
-		for(int j=0; j<1500 ; j++ ){
-			k[i][j]=-1; 
-		}
+for(int i=0; i<1500 ; i++){        // 'zero' a matriz dando pra ela o valor de -1
+	for(int j=0; j<1500 ; j++ ){
+		k[i][j]=-1; 
 	}
+}
 
 double DTW[1500][1500];
 
@@ -160,8 +160,8 @@ int inteiro_teste(double a){
 
 }
 
-
-int custolocal(int a, int b, int x, int y){
+//ok
+double custolocal(int a, int b, int x, int y){
 	double custo;
 
 	if(MatrizA[x][a]>MatrizB[y][b]){                 // pra nao precisar de raiz quadrada eu vejo quem eh o maior antes de achar a diferença pra ela ja sair em modulo
@@ -170,8 +170,11 @@ int custolocal(int a, int b, int x, int y){
 	else{
 		custo=MatrizB[y][b] - MatrizA[x][a];
 	}
+
+	return custo;
 	
 }
+
 
 //ok
 double minimo(double a, double b, double c){
@@ -211,17 +214,21 @@ double minimo(double a, double b, double c){
 
 }
 
-void dtw(double MatrizA[][], double MatrizB[][], double DTW[][]){ // Vetor A = i posiçoes, vetor a ser analisado. Vetor B = j posiçoes, vetor exemplo para comparaçao
+//ok
+void dtw(double Matriz1[4][5], double Matriz2[4][5], double DTW[5][5]){ // Vetor A = i posiçoes, vetor a ser analisado. Vetor B = j posiçoes, vetor exemplo para comparaçao
 	int x = 0;
 		int y = 0;
-		while(MatrizA[x][0] =! -1){ // isso eh pra ele ir descendo nas linhas da matriz, ou seja ir passando de vetor e ele para quando o primeiro valor for zero, pq antes d preencher a matriz vou zerar ela
+		while(Matriz1[x][0] >= 0){ // isso eh pra ele ir descendo nas linhas da matriz, ou seja ir passando de vetor e ele para quando o primeiro valor for zero, pq antes d preencher a matriz vou zerar ela
     	
-    	while(MatrizB[y][0] =! -1){
+    	while(Matriz2[y][0] >= 0){
+    		
 
-			for(int a=1; inteiro_teste( MatrizA[x][a]) == 0; a++){ //a e b == 1 pq os valores da posicao 0 sao as classificacoes dos movimentos
+			for( a=1; Matriz1[x][a] >=0; a++){ //a e b == 1 pq os valores da posicao 0 sao as classificacoes dos movimentos
 
-				for(int b=1; inteiro_teste( MatrizB[y][a]) == 0; b++){
-					int c = custolocal(a,b,x,y);
+				for( b=1; Matriz2[y][b] >=0; b++){
+					
+					double c = custolocal(a,b,x,y);
+					
 						if(a!=1 && b!=1){
 						DTW[a][b]= c + minimo(DTW[a-1][b-1],DTW[a-1][b], DTW[a][b-1]);
 					}
@@ -238,19 +245,24 @@ void dtw(double MatrizA[][], double MatrizB[][], double DTW[][]){ // Vetor A = i
 					if(a==1 && b==1){   // nesse caso noa tem valores nem pra a-1 nem pra b-1 entao o valor e o proprio c
 						DTW[a][b]= c ;
 					}
-
+					
+			
 				}
+			
+				
 			}
-		 
-			k[x][y] = DTW[a][b]; // guardo o ultimo valor da matriz numa matriz que guarda todos os k
-			kmovimento[x][y] = MatrizB[y][0];  //guardo o valor da classificaçao do movimento
+			
+			k[x][y] = DTW[a-1][b-1]; // guardo o ultimo valor da matriz numa matriz que guarda todos os k
+			kmovimento[x][y] = Matriz2[y][0];  //guardo o valor da classificaçao do movimento
 
 			y++; //Aqui eu mudo a linha do vetor B q sao meus exemplos
 		}
-
+		
+		y=0; //Reseto a coluna
 		x++; //Aqui eu mudo a linha do vetor A q é o vetor a ser analisado
 	}
 } 
+
 
 
 //ok
@@ -360,3 +372,11 @@ void LerTreino (){
 		
 
 }
+
+
+
+
+// Se tiver dando algo errado e vc nao sabe o pq, talvez seja na leitura do treino, acho q ta certo
+// mas talvez esteja errado o parametro para ele comecar a ignorar os inteiros 0,1 e 2 que aparecem
+// no meio das séries que vc tinha cversado cm o barney la, se tiver dando muito ruim da uma conferida nisso
+
