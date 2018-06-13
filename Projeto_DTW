@@ -34,7 +34,6 @@ for(int i=0; i<1500 ; i++){        // 'zero' a matriz dando pra ela o valor de -
 double DTW[1500][1500];
 
 
-
 int comparando(int q, int s, int w){
 	
 	for(int l=0; l<12 ; l++){
