@@ -4,56 +4,50 @@
 #include "time.h"
 
 
-int acertos=0;
-int erros=0;
+double acertos=0;
+double erros=0;
 int indice=0;
-int u=0;
-int m=1500;
-int n=1500;
-int aux=-1;
-int aux2=-1;
-int kvalor=1 // k valores, assumindo 1 / 2 / 3 / 5 / 10 / 20
+int colunastotal;
+//int u=0;
+int m=100;
+//int n=100;
+//int a,b=0;
+//int aux=-1;
+//int aux2=-1;
+//int kvalor=1 // k valores, assumindo 1 / 2 / 3 / 5 / 10 / 20
 
-double MatrizA[1500][1500];
+double MatrizA[1000][1000];
+double MatrizB[1000][1000];
 
-double MatrizA = LerTeste;
-double MatrizB = LerTreino;
+//double MatrizA = LerTeste;
+//double MatrizB = LerTreino;
 
-int kmovimento[100000][10000]; // guardarei as classificacoes dos valores d k
-double k[15][15]; // guardarei os valores de k
-
-for(int j=0; j<100000 ; j++ ){
-			kmovimento[j]=-1; 
-		}
-
-double k[1500][1500]; // guardarei os valores de k
+int kmov[1500][1500]; // guardarei as classificacoes dos valores d k
+//double k[100][100]; // guardarei os valores de k
 
 
-for(int i=0; i<1500 ; i++){        // 'zero' a matriz dando pra ela o valor de -1
-	for(int j=0; j<1500 ; j++ ){
-		k[i][j]=-1; 
-	}
-}
+
 
 double DTW[1500][1500];
+double k[1500][1500];
 
 
 //ok
-int comparando(int q, int s,int kmovimento[10000][10000]){
+int comparando(int q, int s){
 
 	int vetorkvalores[13];
 	for(int l=0; l<=12 ; l++){
 	vetorkvalores[l]=0;
 	}
 	
-	
+	//printf("okaqui\n");
 	//calculo da moda
 	for(int i=0;i<q;i++){
 	
-		for(int j=1; j<=12;j++){
+		for(int j=0; j<=12;j++){
 		
-			
-			if(kmovimento[s][i]==j){//um vetor cm valores de 1 à 12, sempre o nmero aparecer no kmovimento eu acresento 1, dps vejo qual casa do vetor tem maior valor, aparece mais, eh a moda
+			//printf("\n\n\n\nkmov[%d][%d]:%d\n",s,i,kmov[s][i] );
+			if(kmov[s][i]==j){//um vetor cm valores de 1 à 12, sempre o nmero aparecer no kmov eu acresento 1, dps vejo qual casa do vetor tem maior valor, aparece mais, eh a moda
 				
 				vetorkvalores[j]++;
 			}
@@ -61,27 +55,29 @@ int comparando(int q, int s,int kmovimento[10000][10000]){
 
 		}
 	}
-	
+	//printf("ok2aqui\n");
 	
 
 	int indice=0;
 	int max=0;
 
 
-	for(int i=1;i<=12;i++){
+	for(int i=0;i<=12;i++){
 
 		if(vetorkvalores[i]>max){
 			max=vetorkvalores[i];
 			indice=i;
 		}
+
 	}
 	
-	
+	printf("vetor[%d]=%d\n",indice,vetorkvalores[indice]);
 
-	for(int i=1;i<=12;i++){
-
-		if(vetorkvalores[i]==max && i!=indice){
-			comparando(q+1,s,kmovimento);
+	for(int z=0;z<=12;z++){
+		//printf("\nkvalores%d\n",vetorkvalores[z] );
+		if((vetorkvalores[z]==max && z != indice)&& max != 0){
+			printf("fudeo..\n");
+			comparando(q+1,s);
 			return 0;
 
 		}
@@ -105,53 +101,108 @@ int comparando(int q, int s,int kmovimento[10000][10000]){
 
 
 
-
+//ok
 double ordenar_classificar(){
 
 	//ORDENANDO
-	int u=0;
+	//int u=0;
 	int t=0;
 	int n=0;
 	int p=0;
-	int aux1=0;
-	int aux2=0;
-	int kvalor=1 // k valores, assumindo 1 / 2 / 3 / 5 / 10 / 20
+	double aux1=0;
+	double aux2=0;
+	int kvalor=1; // k valores, assumindo 1 / 2 / 3 / 5 / 10 / 20
+	//printf("ok1\n");
+	for(int u=0;u<colunastotal;u++){ // aqui vai ser sempre zero, le todo o arquivo
+		//printf("proximo vetor\n");
+		//printf("ok1\n");
+		//while(k[u][t] != -1){ //contando o tamanho da linha
+		//	n++; //tamanho da linha
+		//	t++; //passa pra próxima coluna ateh acabar a linha k== -1
+		//}
 
-	while(k[u][t]=! -1){ // aqui vai ser sempre zero, le todo o arquivo
-
-		while(k[u][t]=! -1){ //contando o tamanho da linha
-			n++; //tamanho da linha
-			t++; //passa pra próxima coluna ateh acabar a linha k== -1
-		}
-
-		for(int i=0;i<n;i++){
-
-			if(k[u][i]>k[u][i+1]){
-
-				aux=k[u][i];
-				k[u][i]=k[u][i+1];
-				k[u][i+1]=aux;
-
-				aux2=kmovimento[u][i];
-				kmovimento[u][i]=kmovimento[u][i+1];
-				kmovimento[u][i+1]=aux2;
+		while(0<1){
+			if(k[u][t]==-1 ){
+				break;
 			}
+			t++;
 		}
 
-		n=0; // volta pra cond inicial
+
+
+		//printf("Linhas %d\n",);
+		//printf("ok2\n");
+		for(int i=0;i<t;i++){
+			for(int j=i+1; j<t; ++j){
+				
+			
+					if(k[u][i]>k[u][j] ){
+				//printf("k[%d][%d]=%d\n",u,i,kmov[u][i] );
+				//printf("k[%d][%d]=%d\n",u,j,kmov[u][j] );
+				
+					aux1=k[u][i];
+					k[u][i]=k[u][j];
+					k[u][j]=aux1;
+
+					//printf("k[%d][%d]=%lf\n",u,i,k[u][i] );
+					//printf("k[%d][%d]=%lf\n",u,j,k[u][j] );
+					aux2=kmov[u][i];
+					kmov[u][i]=kmov[u][j];
+					kmov[u][j]=aux2;
+				//printf("k[%d][%d]=%d\n",u,i,kmov[u][i] );
+				//printf("k[%d][%d]=%d\n",u,j,kmov[u][j] );
+				
+					}
+
+				
+			}
+		
+		}
+		p++;
+		//n=0; // volta pra cond inicial
 		t=0; //volta pra cond inicial
-		u++ //passa pra proxima linha,prox vetor
+		//u++; //passa pra proxima linha,prox vetor
 
 	}
-
+				printf("k[%d][%d]=%lf\n",27,35,k[27][35] );
+				printf("k2[%d][%d]=%lf\n\n",27,36,k[27][36] );
+				printf("k[%d][%d]=%lf\n",27,37,k[27][37] );
+				printf("k2[%d][%d]=%lf\n\n",27,38,k[27][38] );
+	//printf("MatrizA %lf\n",MatrizA[u][t] );
 	//agora tenho todos meus k vetores ordenados
 	//COMPARANDO
-	while(p<u-1){
-		comparando(kvalor,p);
-		p++
+	printf("k[%d][%d]=%d\n",0,0,kmov[0][0] );
+	int colunas=0;
+	printf("k[%d][%d]=%d\ncolunas=%d\n",0,0,kmov[125][0],colunas );	
+	
+
+	for(int i=0;i<50;i++){
+		for(int j=0;j<50;j++){
+			printf("kmov[%d][%d]=%d ",i,j,kmov[i][j]);
+		}
+		printf("\n");
 	}
 
-	double taxafinal = acertos/(u-1);
+	for(int i=0;i<50;i++){
+		for(int j=0;j<50;j++){
+			printf("k[%d][%d]=%lf ",i,j,k[i][j]);
+		}
+		printf("\n");
+	}
+
+
+	while(colunas<p){
+		//printf("calculando acertos...\n");
+		comparando(kvalor,colunas);
+		colunas++;
+	}
+
+	double taxafinal = acertos/colunastotal;
+
+	printf("taxa %lf\n", taxafinal );
+	printf("acertos %lf\n",acertos );
+	printf("%lf\n",erros);
+	printf("%d\n",colunastotal );
 
 	return taxafinal;
 
@@ -159,12 +210,12 @@ double ordenar_classificar(){
 }
 
 //ok
-int inteiro_teste(double a){
+int inteiro_teste(double t){
 	int x;
 	double n;
-	n=(int)a;
+	n=(int)t;
 
-	if (n==a){
+	if (n==t){
 		x=1;
 	}
 	else{
@@ -175,14 +226,14 @@ int inteiro_teste(double a){
 }
 
 //ok
-double custolocal(int a, int b, int x, int y){
+double custolocal(int A, int B, int X, int Y){
 	double custo;
 
-	if(MatrizA[x][a]>MatrizB[y][b]){                 // pra nao precisar de raiz quadrada eu vejo quem eh o maior antes de achar a diferença pra ela ja sair em modulo
-		custo= MatrizA[x][a] - MatrizB[y][b];      // ao inves d vetores eu coloco as linhas das matrizes formadas pelos dados dos arquivos
+	if(MatrizA[X][A]>MatrizB[Y][B]){                 // pra nao precisar de raiz quadrada eu vejo quem eh o maior antes de achar a diferença pra ela ja sair em modulo
+		custo= MatrizA[X][A] - MatrizB[Y][B];      // ao inves d vetores eu coloco as linhas das matrizes formadas pelos dados dos arquivos
 	}
 	else{
-		custo=MatrizB[y][b] - MatrizA[x][a];
+		custo=MatrizB[Y][B] - MatrizA[X][A];
 	}
 
 	return custo;
@@ -191,34 +242,34 @@ double custolocal(int a, int b, int x, int y){
 
 
 //ok
-double minimo(double a, double b, double c){
+double minimo(double aa, double bb, double cc){
 	double min;
-	if (a<b){
-	if(b<c){
-		min=a;
+	if (aa<bb){
+	if(bb<cc){
+		min=aa;
 	}
 	else{
-		if(a<c){
-			min=a;
+		if(aa<cc){
+			min=aa;
 		}
 
 			else{
-				min=c;
+				min=cc;
 				}
 			
 		}
 	}
 
 	else{
-		if(a<c){
-			min=b;
+		if(aa<cc){
+			min=bb;
 		}
 			else{
-				if(b<c){
-					min=b;
+				if(bb<cc){
+					min=bb;
 				}
 						else{
-							min=c;
+							min=cc;
 						}
 			}
 
@@ -229,17 +280,18 @@ double minimo(double a, double b, double c){
 }
 
 //ok
-void dtw(double Matriz1[4][5], double Matriz2[4][5], double DTW[5][5]){ // Vetor A = i posiçoes, vetor a ser analisado. Vetor B = j posiçoes, vetor exemplo para comparaçao
+void dtw(){ // Vetor A = i posiçoes, vetor a ser analisado. Vetor B = j posiçoes, vetor exemplo para comparaçao
+	int a,b;
 	int x = 0;
 		int y = 0;
-		while(Matriz1[x][0] >= 0){ // isso eh pra ele ir descendo nas linhas da matriz, ou seja ir passando de vetor e ele para quando o primeiro valor for zero, pq antes d preencher a matriz vou zerar ela
+		while(MatrizA[x][0] != -1){ // isso eh pra ele ir descendo nas linhas da matriz, ou seja ir passando de vetor e ele para quando o primeiro valor for zero, pq antes d preencher a matriz vou zerar ela
     	
-    	while(Matriz2[y][0] >= 0){
+    	while(MatrizB[y][0] != -1){
     		
 
-			for( a=1; Matriz1[x][a] >=0; a++){ //a e b == 1 pq os valores da posicao 0 sao as classificacoes dos movimentos
+			for( a=1; MatrizA[x][a] !=-1; a++){ //a e b == 1 pq os valores da posicao 0 sao as classificacoes dos movimentos
 
-				for( b=1; Matriz2[y][b] >=0; b++){
+				for( b=1; MatrizB[y][b] != -1; b++){
 					
 					double c = custolocal(a,b,x,y);
 					
@@ -260,21 +312,25 @@ void dtw(double Matriz1[4][5], double Matriz2[4][5], double DTW[5][5]){ // Vetor
 						DTW[a][b]= c ;
 					}
 					
-			
+								
 				}
 			
-				
+			//printf("DTW %lf\n",DTW[a][b] );	
 			}
-			
+			//printf("DTW %lf\n",DTW[a-1][b-1] );
 			k[x][y] = DTW[a-1][b-1]; // guardo o ultimo valor da matriz numa matriz que guarda todos os k
-			kmovimento[x][y] = Matriz2[y][0];  //guardo o valor da classificaçao do movimento
-
+			kmov[x][y] = MatrizB[y][0];  //guardo o valor da classificaçao do movimento
+			//printf("%lf\n",k[x][y] );
+			//printf("kmov[%d][%d]=%d\n",x,y,kmov[x][y] );
 			y++; //Aqui eu mudo a linha do vetor B q sao meus exemplos
 		}
-		
+		//printf("%d\n",y );
 		y=0; //Reseto a coluna
+		//printf("%d\n",x );
 		x++; //Aqui eu mudo a linha do vetor A q é o vetor a ser analisado
+		colunastotal=x;
 	}
+	
 } 
 
 
@@ -282,9 +338,9 @@ void dtw(double Matriz1[4][5], double Matriz2[4][5], double DTW[5][5]){ // Vetor
 //ok
 void LerTeste (){
 
-
-	for(int i=0; i<m ; i++){        // 'zero' a matriz dando pra ela o valor de -1
-		for(int j=0; j<n ; j++ ){
+	int aux;
+	for(int i=0; i<1000 ; i++){        // 'zero' a matriz dando pra ela o valor de -1
+		for(int j=0; j<1000 ; j++ ){
 			MatrizA[i][j]=-1; 
 		}
 	}
@@ -297,8 +353,9 @@ void LerTeste (){
 	int g=0;
 	// MANEIRA 2 acho q vai ser essa
 	while (!feof(arq)){ // talvez tenha q ser um for(for m<nmero maximo de linhas) aqui, n sei se ele le o arquivo sempre q volta aqui, ou se ele le tudo de uma vez 
-	
+
 		fscanf(arq, "%lf", &MatrizA[f][g]);
+		
 		if(f != 0 || g != 0){
 			if(MatrizA[f][0]<=2){
 			if (inteiro_teste(MatrizA[f][g]) == 1){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
@@ -321,7 +378,7 @@ void LerTeste (){
 
 		}
 		}
-	      
+
 			g++;
 		
 	
@@ -336,10 +393,10 @@ void LerTeste (){
 //ok
 void LerTreino (){
 
-
-	for(int i=0; i<m ; i++){        // 'zero' a matriz dando pra ela o valor de -1
-		for(int j=0; j<n ; j++ ){
-			MatrizA[i][j]=-1; 
+	int aux;
+	for(int i=0; i<1000 ; i++){        // 'zero' a matriz dando pra ela o valor de -1
+		for(int j=0; j<1000 ; j++ ){
+			MatrizB[i][j]=-1; 
 		}
 	}
 	
@@ -352,25 +409,25 @@ void LerTreino (){
 	// MANEIRA 2 acho q vai ser essa
 	while (!feof(arq)){ // talvez tenha q ser um for(for m<nmero maximo de linhas) aqui, n sei se ele le o arquivo sempre q volta aqui, ou se ele le tudo de uma vez 
 	
-		fscanf(arq, "%lf", &MatrizA[f][g]);
+		fscanf(arq, "%lf", &MatrizB[f][g]);
 		if(f != 0 || g != 0){
-			if(MatrizA[f][0]<=2){
-			if (inteiro_teste(MatrizA[f][g]) == 1){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
-				aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
-				MatrizA[f][g] = -1; // zero o valor nessa posiçao
+			if(MatrizB[f][0]<=2){
+			if (inteiro_teste(MatrizB[f][g]) == 1){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
+				aux = MatrizB[f][g]; // guardo esse valor inteiro colocado errado
+				MatrizB[f][g] = -1; // zero o valor nessa posiçao
 				f++; // arrumo a linha
 				g=0; // arrumo a coluna
-				MatrizA[f][g] = aux; // ponho o valor no lugar certo
+				MatrizB[f][g] = aux; // ponho o valor no lugar certo
 			}
 		}
 		else{
 
-			if (inteiro_teste(MatrizA[f][g]) == 1 && MatrizA[f][g]>2){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
-				aux = MatrizA[f][g]; // guardo esse valor inteiro colocado errado
-				MatrizA[f][g] = -1; // zero o valor nessa posiçao
+			if (inteiro_teste(MatrizB[f][g]) == 1 && MatrizB[f][g]>2){ // se o nmero for inteiro ele ja vai estar no fim da linha m, oq ta errado pq ele tem q estar no comeco do vetor, ja que inteiro significa novo vetor
+				aux = MatrizB[f][g]; // guardo esse valor inteiro colocado errado
+				MatrizB[f][g] = -1; // zero o valor nessa posiçao
 				f++; // arrumo a linha
 				g=0; // arrumo a coluna
-				MatrizA[f][g] = aux; // ponho o valor no lugar certo
+				MatrizB[f][g] = aux; // ponho o valor no lugar certo
 			}
 
 		}
@@ -386,6 +443,54 @@ void LerTreino (){
 		
 
 }
+
+
+
+int main(){
+
+	LerTeste();
+	printf("%lf\n",MatrizA[965][0] );
+
+	LerTreino();
+	printf("%lf\n",MatrizB[242][0] );
+
+for(int i=0;i<1500;i++){
+		for(int j=0;j<1500;j++){
+			k[i][j]=-1;
+		}
+	}
+
+
+	
+	for(int i=0;i<1500;i++){
+		for(int j=0;j<1500;j++){
+			kmov[i][j]=-1;
+		}
+	}
+
+	dtw();
+	//printf("%lf\n",DTW[2][5] );
+
+	
+	//printf("k %lf\nkmov %d\n",k[2][5],kmov[45][85] );
+	printf("k[%d][%d]=%lf\n",27,35,k[27][35] );
+				printf("k2[%d][%d]=%lf\n\n",27,36,k[27][36] );
+				printf("k[%d][%d]=%lf\n",27,37,k[27][37] );
+				printf("k2[%d][%d]=%lf\n\n",27,38,k[27][38] );
+
+	ordenar_classificar();
+
+	printf("k %lf\nkmov %d\n",k[2][5],kmov[45][85] );
+
+
+	return 0;
+}
+
+
+
+
+
+
 
 
 
