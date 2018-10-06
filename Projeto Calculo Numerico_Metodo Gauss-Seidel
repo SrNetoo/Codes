@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-
 void main(){
 
 	int n,i,j,it,itmax,controle;
