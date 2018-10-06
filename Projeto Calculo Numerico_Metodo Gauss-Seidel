@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+
+void main(){
+
+	int n,i,j,k,kmax,controle;
+	long float matrizA[1000][1000],vetorb[1000];
+	long float erro,xk[1000],xk1[1000];
+	long float som1,som2;
+
+
+//INICIALIZANDO AS VARIAVEIS
+	e=0;
+	k=0;
+	som1=0;
+	som2=0;
+
+	for(int y=0, y<1000, y++){
+		xk[y]=0;
+		xk1[y]=0;
+		vetorb[y]=0;
+
+	}
+
+	printf("Digite 1 para teste do método\nDigite 2 para dar um valor de 1/i; i=1,2,...n para o vetor B", );
+	scanf("%d", &controle);
+
+	
+	printf("\nDigite agora o tamanho(linhas e colunas) de sua matriz:\n")
+	scanf("%lf", &n);
+	printf("\nDigite agora seu erro a ser considerado\n");
+	scanf("%lf", &erro);
+	printf("\nDigite agora o numero max de iteracoes que o metodo devera seguir:\n");
+	scanf("%d", &kmax)
+
+
+//INICIALIZANDO MATRIZ A
+	for(int y=0;y<n;y++){ // zera toda matriz
+		for(z=0;z<n,z++){
+			matrizA[y][z]=0;
+		}
+	}
+
+	for(int y=0;y<(n-1);y++){ // preenche diagonais com -1
+		matrizA[y][y+1]=-1;
+		matrizA[y+1][y]=-1;
+	}
+
+
+	for(int y=0;y<(n-3),y++){ // preenche diagonais com -1
+		matrizA[y][y+3]=-1;
+		matrizA[y+3][y]=-1;
+	}
+
+	for(int y=0,y<n,y++){ // preenche diagonal principal
+		matrizA[y][y]=4.5;
+	}
+
+
+//TESTA PRA VER QUAL ITEM ESTAMOS TRABALHANDO
+	if(controle==1){//inicializa vetor B
+		for(int y=0,y<n,y++){
+			som1=0;
+			for(int z=0,z<n,z++){
+				som1=som1 + matrizA[y][z]; // faz o somatorio da formula
+
+			}
+			vetorb[y]=som1;// aplica o somatorio no valor do veto B
+		}
+	}
+
+	if(controle==2){
+		for(y=0,y<n,y++){
+			vetorb[y]=1/(y+1); // inicializa vetor B 
+		}
+	}
+
+
+//COM TODAS VARIAVEIS PRONTAS INICIO AGORA A OPERACAO
+
+
+
+
+}
