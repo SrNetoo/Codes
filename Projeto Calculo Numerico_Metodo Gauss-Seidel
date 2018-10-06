@@ -5,82 +5,196 @@
 
 void main(){
 
-	int n,i,j,k,kmax,controle;
-	long float matrizA[1000][1000],vetorb[1000];
-	long float erro,xk[1000],xk1[1000];
-	long float som1,som2;
+	int n,i,j,it,itmax,controle;
+	double matrizA[500][500],vetorb[500],vetorAxK[500];
+	double erro,xk[500],xk1[500],vetorerro[500],vetorerro2[500];
+	double som1,som2,erromax,erromax2,divisor;
 
 
 //INICIALIZANDO AS VARIAVEIS
-	e=0;
-	k=0;
+	erro=0;
+	it=0;
+	itmax=0;
 	som1=0;
 	som2=0;
+	erromax=0;
+	erromax2=0;
 
-	for(int y=0, y<1000, y++){
-		xk[y]=0;
-		xk1[y]=0;
-		vetorb[y]=0;
-
+	for(i=0; i<500; i++){
+		xk[i]=0;
+		xk1[i]=0;
+		vetorb[i]=0;
+		vetorerro[i]=0;
+		vetorerro2[500];
+		vetorAxK[500];
 	}
 
-	printf("Digite 1 para teste do método\nDigite 2 para dar um valor de 1/i; i=1,2,...n para o vetor B", );
+	printf("Digite 1 para teste do método\nDigite 2 para dar um valor de 1/i; i=1,2,...n para o vetor B\n" );
 	scanf("%d", &controle);
-
-	
-	printf("\nDigite agora o tamanho(linhas e colunas) de sua matriz:\n")
-	scanf("%lf", &n);
+	printf("\nDigite agora o tamanho(linhas e colunas) de sua matriz:\n");
+	scanf("%d", &n);
 	printf("\nDigite agora seu erro a ser considerado\n");
 	scanf("%lf", &erro);
 	printf("\nDigite agora o numero max de iteracoes que o metodo devera seguir:\n");
-	scanf("%d", &kmax)
+	scanf("%d", &itmax);
 
 
 //INICIALIZANDO MATRIZ A
-	for(int y=0;y<n;y++){ // zera toda matriz
-		for(z=0;z<n,z++){
-			matrizA[y][z]=0;
+	for( i=0;i<n;i++){ // zera toda matriz
+		for(j=0;j<n;j++){
+			matrizA[i][j]=0;
 		}
 	}
 
-	for(int y=0;y<(n-1);y++){ // preenche diagonais com -1
-		matrizA[y][y+1]=-1;
-		matrizA[y+1][y]=-1;
+	for( i=0;i<(n-1);i++){ // preenche diagonais com -1
+		matrizA[i][i+1]=-1;
+		matrizA[i+1][i]=-1;
 	}
 
 
-	for(int y=0;y<(n-3),y++){ // preenche diagonais com -1
-		matrizA[y][y+3]=-1;
-		matrizA[y+3][y]=-1;
+	for(int i=0;i<(n-3);i++){ // preenche diagonais com -1
+		matrizA[i][i+3]=-1;
+		matrizA[i+3][i]=-1;
 	}
 
-	for(int y=0,y<n,y++){ // preenche diagonal principal
-		matrizA[y][y]=4.5;
+	for( i=0;i<n;i++){ // preenche diagonal principal
+		matrizA[i][i]=4.5;
 	}
 
 
 //TESTA PRA VER QUAL ITEM ESTAMOS TRABALHANDO
 	if(controle==1){//inicializa vetor B
-		for(int y=0,y<n,y++){
+		for( i=0;i<n;i++){
 			som1=0;
-			for(int z=0,z<n,z++){
-				som1=som1 + matrizA[y][z]; // faz o somatorio da formula
+			for( j=0;j<n;j++){
+				som1=som1 + matrizA[i][j]; // faz o somatorio da formula
 
 			}
-			vetorb[y]=som1;// aplica o somatorio no valor do veto B
+			vetorb[i]=som1;// aplica o somatorio no valor do veto B
 		}
 	}
 
 	if(controle==2){
-		for(y=0,y<n,y++){
-			vetorb[y]=1/(y+1); // inicializa vetor B 
+		
+		for(i=1;i<n;i++){
+			divisor=i;
+			vetorb[i]=1/divisor; // inicializa vetor B 
 		}
 	}
 
+//IMPRIME OS DADOS
+	printf("MATRIZ A:\n\n");
+	for(i=0;i<n;i++){
+		for(j=0;j<n;j++){
+			printf("%.2lf ",matrizA[i][j] );
+		}
+		printf("\n");
+	}
+
+	printf("\n");
+
+	printf("VETOR B:\n\n");
+	for(i=0;i<n;i++){
+		printf("%.20lf\n",vetorb[i] );
+	}
+
+	printf("\n\n");
 
 //COM TODAS VARIAVEIS PRONTAS INICIO AGORA A OPERACAO
+	while(it<itmax){
+		erromax=0;
+		it++; // interacoes
+		for(i=0;i<n;i++){
+			
+			som1=0;
+			som2=0;
+			for (j=0; j < i;j++){
+				if(j!=i){
+				
+				som1=som1 + (matrizA[i][j]*xk1[j]); // calculo do primeiro somatorio da formula
+				}
 
 
+			}
+			for(j=i+1;j<n;j++){
+				som2=som2 + (matrizA[i][j] * xk[j]); // calculo do segundo somatorio da formula
+			}
+
+			xk1[i]=(vetorb[i]-som1-som2)/matrizA[i][i]; // calculo de Xk+1
+
+		}
+
+		
+		for(i=0;i<n;i++){
+			if(xk1[i]>xk[i]){
+			vetorerro[i]=xk1[i]-xk[i];  //modulo do erro eh colcoado em um vetor
+		}
+		else{
+			vetorerro[i]=xk[i]-xk1[i];
+		}
+
+			if(erromax<vetorerro[i]){
+
+				erromax=vetorerro[i]; //tomamos o maior erro deste vetor
+
+			}
+			
+		}
+
+	
+		if(erromax<erro){
+		printf("Parou pelo erro\n");  // se erro for menor que o erro passado de criterio de parada o programa nao fara mais interacoes
+			it=itmax+1;
+		}
+		else{
+			
+			for(i=0;i<=n;i++){
+				xk[i]=xk1[i]; //caso contrario Xk+1 agora eh Xk e o processo recomeça
+			}
+		}
+
+
+	}
+
+	if(controle==2){
+		for(i=0;i<n;i++){
+			som1=0;
+			for(j=0;j<n;j++){
+				vetorAxK[i]=vetorAxK[i] + matrizA[i][j]*xk1[j]; // vetorAxK eh matrizA multiplicado pelo vetor Xk+1
+			}
+		}
+	}
+
+	for(i=0;i<n;i++){
+			if(vetorAxK[i]>vetorb[i]){
+			vetorerro2[i]=vetorAxK[i]-vetorb[i];  //modulo do erro eh colcoado em um vetor
+		}
+		else{
+			vetorerro2[i]=vetorb[i]-vetorAxK[i];
+		}
+
+			if(erromax2<vetorerro2[i]){
+
+				erromax2=vetorerro2[i]; //tomamos o maior erro deste vetor
+
+			}			
+		}
+
+
+//IMPRESSAO DOS RESULTADOS
+	
+	printf("\n");
+
+	printf("VETOR X(k+1):\n");
+	for(i=0;i<n;i++){
+		printf("%.15lf\n",xk1[i] );
+	}
+
+
+	if(controle==2){
+
+	printf("\nValor de R:%.20lf\n",erromax2 );
+	}
 
 
 }
