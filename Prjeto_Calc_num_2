@@ -1,0 +1,209 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+
+// eh necessario compilar com -lm pois o codigo usa a funcao de potencia pow()
+
+int main(){
+
+
+	char espera1;
+
+
+	printf("\nAperte enter para calcular o valor pelo metodo do Trapezio");
+	scanf("%c",&espera1);
+
+
+//TRAPEZIO variaveis iniciadas cm T de trapezio
+	int Tnintervalos = 28887;
+	int Tnpontos = 2888;
+	double Th;
+	double Tf[28887];
+	double Texpoente;
+	double Tx;
+	double Tsoma;
+	double Tresultado;
+
+
+	//calcular h e variaveis iniciais
+	Th=0.00034638; // (1-0)/2888
+	Tx=0;
+	Texpoente = -(0.5)*(Tx*Tx);
+	Tsoma = 0;
+
+
+	//calcular funcao nos pontos
+	for(int i = 0;i<=2887;i++){
+
+		Tf[i]=pow(M_E,Texpoente); // funcao recebe valor no ponto i
+		Tx=Tx+Th; // avanco o valor do ponto para calculo da funcao no proximo ponto
+		Texpoente = -(0.5)*(Tx*Tx); // valor do expoente depende do novo valor do ponto
+
+			printf("ponto: %lf exp: %lf\n",Tx, Texpoente );
+			printf("f[%d] %lf\n\n",i +1,Tf[i] );
+
+	}
+	printf("\n");
+
+	//calcular a soma
+	for(int i = 1; i < 2887; i++){
+
+		
+			Tsoma = Tsoma + 2*Tf[i];
+		
+		
+
+	}
+
+
+	//somar o valor da funcao nos pontos de extremo
+	Tsoma = Tsoma + Tf[0] + Tf[Tnpontos - 1];
+
+
+	//multiplicar por h/2
+	Tresultado = (Th/2)*Tsoma;
+
+printf("\n");
+	printf("Resultado final pelo metodo Trapezio:\n   %lf\n", Tresultado);
+
+
+
+char espera2;
+
+
+printf("\nAperte enter para calcular o valor pelo metodo 1/3 Simpson");
+scanf("%c",&espera2);
+
+
+
+
+
+
+//1/3 DE SIMPSON   variaveis iniciadas em S de simpson
+	int Snintervalos = 40;
+	int Snpontos = 41;
+	double Sh;
+	double Sf[41];
+	double Sexpoente;
+	double Sx;
+	double Ssoma;
+	double Sresultado;
+	
+
+	//calcular h e variaveis iniciais
+	Sh=0.025; // (1-0)/40
+	Sx=0;
+	Sexpoente = -(0.5)*(Sx*Sx);
+	Ssoma = 0;
+
+printf("h %lf\n",Sh );
+	//calcular funcao nos pontos
+	for(int i = 0;i<=40;i++){
+
+		Sf[i]=pow(M_E,Sexpoente); // funcao recebe valor no ponto i
+		Sx=Sx+Sh; // avanco o valor do ponto para calculo da funcao no proximo ponto
+		Sexpoente = -(0.5)*(Sx*Sx); // valor do expoente depende do novo valor do ponto
+
+			printf("ponto: %lf exp: %lf\n",Sx, Sexpoente );
+			printf("f[%d] %lf\n\n",i+1,Sf[i] );
+
+	}
+	printf("\n");
+
+	//calcular a soma
+	for(int i = 1; i < 40; i++){
+
+		if(i%2 == 0){ // indice eh par
+			Ssoma = Ssoma + 2*Sf[i];
+
+		}else{// indice eh impar
+			Ssoma = Ssoma + 4*Sf[i];
+		}
+		
+
+
+	}
+
+
+	//somar o valor da funcao nos pontos de extremo
+	Ssoma = Ssoma + Sf[0] + Sf[Snpontos - 1];
+
+
+	//multiplicar por h/3
+	Sresultado = (Sh/3)*Ssoma;
+
+printf("\n");
+	printf("Resultado final pelo metodo 1/3 de Simpson:\n   %lf\n", Sresultado);
+
+	printf("\n\nMetodo do Trapezio:  %lf\nMetodo de 1/3 Simpson: %lf\n\n\n",Tresultado,Sresultado);
+
+
+
+
+
+
+
+char espera3;
+
+
+printf("\nAperte enter para calcular o valor pela formula de GAUSS-LEGENDRE");
+scanf("%c",&espera3);
+printf("\n\n\n");
+
+
+
+
+
+//GAUSS LEGENDRE
+
+	//com N = 6, temos os seguintes x e f(x), lembrando que como temos uma mudanca de variaveis no
+	//limite de integracao f(x)dx = f(t/2 + 1)*(1/2)dt
+
+	double F[6];
+	double x[6];
+	double t[6];
+	double c[6];
+	double expoente;
+	double GLresultado;
+	GLresultado = 0;
+
+	c[0]= 0.171324;
+	c[1]= 0.360761;
+	c[2]= 0.467913;
+	c[3]= 0.171324;
+	c[4]= 0.360761;
+	c[5]= 0.467913;
+
+	x[0]= 0.93247;
+	x[1]= 0.661209;
+	x[2]= 0.238619;
+	x[3]= -0.93247;
+	x[4]= -0.661209;
+	x[5]= -0.238619;
+
+	for(int i=0;i<6;i++){
+
+		t[i]= (x[i]/2) + 1; // mudando as variaveis dos x tabelados
+		expoente = -(0.5)*(t[i]*t[i]); //calculando o valor do expoente com a variavel t
+		F[i] = (pow(M_E,expoente)/2)*c[i]; // calculo da funcao multiplicado pela constante A da tabela
+		GLresultado = GLresultado + F[i]; // soma as parcelas para chegar no resultado final
+
+
+		printf("F[%d]: %lf * c[%d]: %lf\n",i+1,F[i],i+1,c[i] );
+	}
+
+
+
+	printf("\n\nResultado final pela formula de GAUSS-LEGENDRE:\n   %lf\n", GLresultado);
+
+	printf("\n\n\nMetodo do Trapezio:  %lf\nMetodo de 1/3 Simpson: %lf\nMetodo formula GAUSS-LEGENDRE: %lf\n\n",Tresultado,Sresultado,GLresultado);
+
+
+
+
+	return 0;
+
+
+
+}
